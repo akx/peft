@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import importlib
 import os
-from typing import Optional
 
 from transformers import (
     AutoModel,
@@ -61,7 +60,7 @@ class _BaseAutoPeftModel:
         pretrained_model_name_or_path,
         adapter_name: str = "default",
         is_trainable: bool = False,
-        config: Optional[PeftConfig] = None,
+        config: PeftConfig | None = None,
         **kwargs,
     ):
         r"""

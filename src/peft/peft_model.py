@@ -20,7 +20,7 @@ import os
 import warnings
 from contextlib import contextmanager
 from copy import deepcopy
-from typing import Any, Optional, Union
+from typing import Any
 
 import packaging.version
 import torch
@@ -162,8 +162,8 @@ class PeftModel(PushToHubMixin, torch.nn.Module):
         self,
         save_directory: str,
         safe_serialization: bool = True,
-        selected_adapters: Optional[list[str]] = None,
-        save_embedding_layers: Union[str, bool] = "auto",
+        selected_adapters: list[str] | None = None,
+        save_embedding_layers: str | bool = "auto",
         is_main_process: bool = True,
         **kwargs: Any,
     ) -> None:
@@ -284,10 +284,10 @@ class PeftModel(PushToHubMixin, torch.nn.Module):
     def from_pretrained(
         cls,
         model: torch.nn.Module,
-        model_id: Union[str, os.PathLike],
+        model_id: str | os.PathLike,
         adapter_name: str = "default",
         is_trainable: bool = False,
-        config: Optional[PeftConfig] = None,
+        config: PeftConfig | None = None,
         **kwargs: Any,
     ) -> PeftModel:
         r"""
@@ -443,7 +443,7 @@ class PeftModel(PushToHubMixin, torch.nn.Module):
 
         return prompt_embeddings[0].detach().cpu()
 
-    def get_prompt(self, batch_size: int, task_ids: Optional[torch.Tensor] = None) -> torch.Tensor:
+    def get_prompt(self, batch_size: int, task_ids: torch.Tensor | None = None) -> torch.Tensor:
         """
         Returns the virtual prompts to use for Peft. Only applicable when using a prompt learning method.
         """

@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import os
 from contextlib import contextmanager
-from typing import Any, Optional, Union
+from typing import Any
 
 import torch
 from accelerate.hooks import remove_hook_from_submodules
@@ -234,7 +234,7 @@ class PeftMixedModel(PushToHubMixin, torch.nn.Module):
             self.modules_to_save.update(modules_to_save)
         _set_trainable(self, adapter_name)
 
-    def set_adapter(self, adapter_name: Union[str, list[str]]) -> None:
+    def set_adapter(self, adapter_name: str | list[str]) -> None:
         """
         Sets the active adapter(s) for the model.
 
@@ -268,7 +268,7 @@ class PeftMixedModel(PushToHubMixin, torch.nn.Module):
         self.base_model.set_adapter(adapter_name)
         _set_adapter(self, adapter_name)
 
-    def delete_adapter(self, adapter_name: Union[str, list[str]]) -> None:
+    def delete_adapter(self, adapter_name: str | list[str]) -> None:
         if isinstance(adapter_name, str):
             adapter_name = [adapter_name]
 
@@ -321,7 +321,7 @@ class PeftMixedModel(PushToHubMixin, torch.nn.Module):
         self,
         save_directory: str,
         safe_serialization: bool = False,
-        selected_adapters: Optional[list[str]] = None,
+        selected_adapters: list[str] | None = None,
         **kwargs: Any,
     ):
         raise NotImplementedError(f"Saving is not supported for {self.__class__.__name__} (yet).")
@@ -333,7 +333,7 @@ class PeftMixedModel(PushToHubMixin, torch.nn.Module):
         model_id: str | os.PathLike,
         adapter_name: str = "default",
         is_trainable: bool = False,
-        config: Optional[PeftConfig] = None,
+        config: PeftConfig | None = None,
         **kwargs: Any,
     ):
         r"""

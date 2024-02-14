@@ -14,7 +14,7 @@
 from __future__ import annotations
 
 import warnings
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 from torch import nn
 from tqdm import tqdm
@@ -204,7 +204,7 @@ class MixedModel(BaseTuner):
                 warnings.warn(msg)
         self._set_adapter_layers(enabled=False)
 
-    def set_adapter(self, adapter_name: Union[str, list[str]]) -> None:
+    def set_adapter(self, adapter_name: str | list[str]) -> None:
         for module in self.model.modules():
             if isinstance(module, Layers):
                 if module.merged:
@@ -229,7 +229,7 @@ class MixedModel(BaseTuner):
         merge=True,
         progressbar: bool = False,
         safe_merge: bool = False,
-        adapter_names: Optional[list[str]] = None,
+        adapter_names: list[str] | None = None,
     ):
         if merge:
             if getattr(self.model, "quantization_method", None) == "gptq":
@@ -269,7 +269,7 @@ class MixedModel(BaseTuner):
     def add_weighted_adapter(self, *args: Any, **kwargs: Any) -> None:
         raise NotImplementedError(f"Weighted adapters are not supported for {self.__class__.__name__} (yet).")
 
-    def delete_adapter(self, adapter_name: Union[str, list[str]]) -> None:
+    def delete_adapter(self, adapter_name: str | list[str]) -> None:
         """
         Deletes an existing adapter.
 
@@ -302,7 +302,7 @@ class MixedModel(BaseTuner):
         self.active_adapter = new_adapter or []
 
     def merge_and_unload(
-        self, progressbar: bool = False, safe_merge: bool = False, adapter_names: Optional[list[str]] = None
+        self, progressbar: bool = False, safe_merge: bool = False, adapter_names: list[str] | None = None
     ) -> nn.Module:
         r"""
         This method merges the layers into the base model. This is needed if someone wants to use the base model as a

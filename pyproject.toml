@@ -20,7 +20,6 @@ extend-select = [
 ignore = [
     "C901", # Function too complex
     "E501", # Line length (handled by ruff-format)
-    "UP007", # X | Y style Unions
 ]
 
 [tool.ruff.lint.isort]

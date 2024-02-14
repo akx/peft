@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Literal, Optional, Union
+from typing import Literal
 
 from peft.config import PeftConfig
 from peft.utils import PeftType
@@ -104,7 +104,7 @@ class LoraConfig(PeftConfig):
     """
 
     r: int = field(default=8, metadata={"help": "Lora attention dimension"})
-    target_modules: Optional[Union[list[str], str]] = field(
+    target_modules: list[str] | str | None = field(
         default=None,
         metadata={
             "help": (
@@ -136,7 +136,7 @@ class LoraConfig(PeftConfig):
             )
         },
     )
-    modules_to_save: Optional[list[str]] = field(
+    modules_to_save: list[str] | None = field(
         default=None,
         metadata={
             "help": "List of modules apart from LoRA layers to be set as trainable and saved in the final checkpoint. "
@@ -156,21 +156,21 @@ class LoraConfig(PeftConfig):
             ),
         },
     )
-    layers_to_transform: Optional[Union[list[int], int]] = field(
+    layers_to_transform: list[int] | int | None = field(
         default=None,
         metadata={
             "help": "The layer indexes to transform, is this argument is specified, PEFT will transform only the layers indexes that are specified inside this list. If a single integer is passed, PEFT will transform only the layer at this index. "
             "This only works when target_modules is a list of str."
         },
     )
-    layers_pattern: Optional[Union[list[str], str]] = field(
+    layers_pattern: list[str] | str | None = field(
         default=None,
         metadata={
             "help": "The layer pattern name, used only if `layers_to_transform` is different to None and if the layer pattern is not in the common layers pattern."
             "This only works when target_modules is a list of str."
         },
     )
-    rank_pattern: Optional[dict] = field(
+    rank_pattern: dict | None = field(
         default_factory=dict,
         metadata={
             "help": (
@@ -179,7 +179,7 @@ class LoraConfig(PeftConfig):
             )
         },
     )
-    alpha_pattern: Optional[dict] = field(
+    alpha_pattern: dict | None = field(
         default_factory=dict,
         metadata={
             "help": (
@@ -188,7 +188,7 @@ class LoraConfig(PeftConfig):
             )
         },
     )
-    megatron_config: Optional[dict] = field(
+    megatron_config: dict | None = field(
         default=None,
         metadata={
             "help": (
@@ -204,7 +204,7 @@ class LoraConfig(PeftConfig):
             )
         },
     )
-    megatron_core: Optional[str] = field(
+    megatron_core: str | None = field(
         default="megatron.core",
         metadata={
             "help": (
@@ -215,7 +215,7 @@ class LoraConfig(PeftConfig):
         },
     )
     # dict type is used when loading config.json
-    loftq_config: Union[LoftQConfig, dict] = field(
+    loftq_config: LoftQConfig | dict = field(
         default_factory=dict,
         metadata={
             "help": (

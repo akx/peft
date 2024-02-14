@@ -18,7 +18,7 @@ import re
 import warnings
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
-from typing import Any, Optional, Union
+from typing import Any
 
 import torch
 from accelerate.hooks import AlignDevicesHook
@@ -122,7 +122,7 @@ class BaseTuner(nn.Module, ABC):
             double-check that the `config.target_modules` where specified correctly.
     """
 
-    def __init__(self, model, peft_config: Union[PeftConfig, dict[str, PeftConfig]], adapter_name: str) -> None:
+    def __init__(self, model, peft_config: PeftConfig | dict[str, PeftConfig], adapter_name: str) -> None:
         super().__init__()
 
         self.model = model
@@ -320,7 +320,7 @@ class BaseTuner(nn.Module, ABC):
             else:
                 model.modules_to_save.update(set(peft_config.modules_to_save))
 
-    def merge_adapter(self, adapter_names: Optional[list[str]] = None) -> None:
+    def merge_adapter(self, adapter_names: list[str] | None = None) -> None:
         """
         This method merges the adapter layers into the base model.
 
@@ -351,7 +351,7 @@ class BaseTuner(nn.Module, ABC):
                 with onload_layer(module):
                     module.unmerge()
 
-    def _unloading_checks(self, adapter_names: Optional[list[str]]):
+    def _unloading_checks(self, adapter_names: list[str] | None):
         adapters_to_consider = adapter_names or self.active_adapters
         is_modules_to_save_available = any(
             self.peft_config[adapter].modules_to_save for adapter in adapters_to_consider
@@ -415,7 +415,7 @@ class BaseTunerLayer(ABC):
             weight = base_layer.weight
         return weight
 
-    def merge(self, safe_merge: bool = False, adapter_names: Optional[list[str]] = None) -> None:
+    def merge(self, safe_merge: bool = False, adapter_names: list[str] | None = None) -> None:
         raise NotImplementedError
 
     def unmerge(self) -> None:
@@ -641,7 +641,7 @@ def _maybe_include_all_linear_layers(peft_config: PeftConfig, model: nn.Module) 
     return peft_config
 
 
-def check_adapters_to_merge(module: BaseTunerLayer, adapter_names: Optional[list[str]] = None) -> list[str]:
+def check_adapters_to_merge(module: BaseTunerLayer, adapter_names: list[str] | None = None) -> list[str]:
     """
     Helper function to check which adapters should be merged.
 

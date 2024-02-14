@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import math
-from typing import Any
+from typing import Any, Optional
 
 import torch
 import torch.nn as nn
@@ -132,7 +132,7 @@ class Linear(nn.Module, PolyLayer):
         self._active_adapter = adapter_name
         self.update_layer(adapter_name, poly_config)
 
-    def forward(self, x: torch.Tensor, *args: Any, task_ids: torch.Tensor = None, **kwargs: Any) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, *args: Any, task_ids: Optional[torch.Tensor] = None, **kwargs: Any) -> torch.Tensor:
         previous_dtype = x.dtype
         if self.disable_adapters:
             result = self.base_layer(x, *args, **kwargs)
